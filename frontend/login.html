@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapChallan - Smart Traffic Monitoring</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+        }
+        
+        .login-container {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .input-field:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #333333 0%, #000000 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-demo {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-demo:hover {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-pattern"></div>
+    
+    <div class="login-container p-8 rounded-2xl shadow-2xl w-full max-w-md relative z-10">
+        <!-- Logo and Header -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center mb-4">
+                <div class="bg-black p-3 rounded-full mr-3">
+                    <i class="fas fa-eye text-white text-2xl"></i>
+                </div>
+                <div class="text-left">
+                    <h1 class="text-3xl font-bold text-black logo-icon">SnapChallan</h1>
+                    <p class="text-sm text-gray-600 font-medium">Smart Traffic Monitoring</p>
+                </div>
+            </div>
+            <p class="text-gray-500 text-sm">Secure & Intelligent Violation Reporting</p>
+        </div>
+
+        <div id="error-message" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span></span>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label for="phone" class="block text-sm font-semibold text-gray-800 mb-2">
+                    <i class="fas fa-phone mr-2"></i>Phone Number
+                </label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    required 
+                    class="input-field w-full px-4 py-3 rounded-lg focus:outline-none font-medium"
+                    placeholder="Enter your phone number"
+                >
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-semibold text-gray-800 mb-2">
+                    <i class="fas fa-lock mr-2"></i>Password
+                </label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    class="input-field w-full px-4 py-3 rounded-lg focus:outline-none font-medium"
+                    placeholder="Enter your password"
+                >
+            </div>
+
+            <button 
+                type="submit" 
+                id="login-btn"
+                class="btn-primary w-full text-white py-3 px-6 rounded-lg font-semibold focus:outline-none focus:ring-4 focus:ring-black focus:ring-opacity-20"
+            >
+                <span id="login-text" class="flex items-center justify-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Login
+                </span>
+                <span id="login-spinner" class="hidden flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                </span>
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-sm text-gray-600">
+                Don't have an account? 
+                <a href="#" id="register-link" class="text-black font-semibold hover:text-gray-700 transition-colors">Register here</a>
+            </p>
+        </div>
+
+        <!-- Demo Login Option -->
+        <div class="mt-6 pt-6 border-t border-gray-200">
+            <button 
+                id="demo-login-btn"
+                class="btn-demo w-full text-white py-3 px-6 rounded-lg font-semibold focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-20"
+            >
+                <i class="fas fa-user-cog mr-2"></i>
+                Demo Login
+            </button>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-6 text-center">
+            <p class="text-xs text-gray-400">
+                Powered by AI • Secure • Reliable
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/config.js"></script>
+    <script src="/js/auth.js"></script>
+    
+    <script>
+        // Initialize auth manager
+        const authManager = new AuthManager();
+
+        // Handle login form
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('login-btn');
+            const loginText = document.getElementById('login-text');
+            const loginSpinner = document.getElementById('login-spinner');
+            const errorMsg = document.getElementById('error-message');
+
+            // Show loading state
+            loginText.classList.add('hidden');
+            loginSpinner.classList.remove('hidden');
+            loginBtn.disabled = true;
+            errorMsg.classList.add('hidden');
+
+            try {
+                const result = await authManager.login(phone, password);
+                if (result.success) {
+                    // Redirect to main app
+                    window.location.href = '/';
+                } else {
+                    throw new Error(result.message || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                const errorContainer = document.getElementById('error-message');
+                const errorText = errorContainer.querySelector('span');
+                errorText.textContent = error.message || 'Login failed. Please try again.';
+                errorContainer.classList.remove('hidden');
+            } finally {
+                // Reset button state
+                loginText.classList.remove('hidden');
+                loginSpinner.classList.add('hidden');
+                loginBtn.disabled = false;
+            }
+        });
+
+        // Handle demo login
+        document.getElementById('demo-login-btn').addEventListener('click', async () => {
+            const errorContainer = document.getElementById('error-message');
+            const errorText = errorContainer.querySelector('span');
+            
+            try {
+                // Demo credentials
+                const result = await authManager.login('9999999999', 'demo123');
+                if (result.success) {
+                    window.location.href = '/';
+                } else {
+                    throw new Error('Demo login failed');
+                }
+            } catch (error) {
+                console.error('Demo login error:', error);
+                errorText.textContent = 'Demo login is not available. Please use regular login.';
+                errorContainer.classList.remove('hidden');
+            }
+        });
+
+        // Handle register link
+        document.getElementById('register-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Registration feature will be implemented soon. Please use demo login for now.');
+        });
+
+        // Check if already authenticated
+        authManager.checkAuthStatus().then(() => {
+            if (authManager.isAuthenticated()) {
+                window.location.href = '/';
+            }
+        }).catch(() => {
+            // Authentication check failed, stay on login page
+            console.log('Not authenticated, showing login form');
+        });
+    </script>
+</body>
+</html>

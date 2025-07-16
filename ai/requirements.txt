@@ -1,0 +1,30 @@
+# AI Processing Service Requirements
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+aiofiles>=23.2.0
+redis>=5.0.0
+python-decouple>=3.8
+
+# Computer Vision and ML
+opencv-python==4.9.0.80
+ultralytics>=8.1.0
+torch>=2.2.0
+torchvision>=0.17.0
+numpy<2.0,>=1.24.0
+Pillow>=10.0.0
+
+# Image processing
+pytesseract>=0.3.10
+easyocr>=1.7.0
+
+# Async HTTP client
+httpx>=0.26.0
+
+# Logging and monitoring
+structlog>=23.2.0
+prometheus-client>=0.19.0
+
+# Utilities
+python-dateutil>=2.8.0
+pydantic>=2.5.0

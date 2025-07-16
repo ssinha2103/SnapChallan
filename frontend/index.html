@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapChallan - Report Traffic Violations</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="background-color" content="#ffffff">
+    <meta name="display" content="standalone">
+    <meta name="orientation" content="portrait">
+    
+    <!-- Apple PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SnapChallan">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <!-- Meta Description -->
+    <meta name="description" content="Report traffic violations easily with SnapChallan. Upload photos/videos, complete eKYC verification, and earn rewards for helping make roads safer.">
+    
+    <!-- Preconnect to API -->
+    <link rel="preconnect" href="http://localhost:8000">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/mobile.css">
+    
+    <!-- Loading skeleton styles -->
+    <style>
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="logo">
+            <img src="/icons/icon-192x192.png" alt="SnapChallan" width="100" height="100">
+        </div>
+        <h2>SnapChallan</h2>
+        <p>Loading...</p>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" style="display: none;">
+        <!-- Navigation Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="/icons/icon-48x48.png" alt="SnapChallan" class="logo">
+                    <h1>SnapChallan</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="notification-btn" class="icon-btn" title="Notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span id="notification-badge" class="badge hidden">0</span>
+                    </button>
+                    <button id="menu-btn" class="icon-btn" title="Menu">
+                        <span class="menu-icon">☰</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Side Navigation -->
+        <nav id="side-nav" class="side-nav">
+            <div class="nav-header">
+                <div class="user-profile">
+                    <div class="avatar">👤</div>
+                    <div class="user-info">
+                        <div id="user-name">Loading...</div>
+                        <div id="user-status" class="status">Verifying...</div>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active">📊 Dashboard</a></li>
+                <li><a href="#report" class="nav-link">📸 Report Violation</a></li>
+                <li><a href="#my-reports" class="nav-link">📋 My Reports</a></li>
+                <li><a href="#wallet" class="nav-link">💰 Wallet</a></li>
+                <li><a href="#profile" class="nav-link">⚙️ Profile</a></li>
+                <li><a href="#help" class="nav-link">❓ Help</a></li>
+                <li><a href="#logout" class="nav-link logout">🚪 Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view active">
+                <div class="dashboard-header">
+                    <h2>Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-reports">0</div>
+                            <div class="stat-label">Total Reports</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="approved-reports">0</div>
+                            <div class="stat-label">Approved</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pending-reports">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-earnings">₹0</div>
+                            <div class="stat-label">Total Earnings</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-grid">
+                        <button class="action-btn" onclick="showReportView()">
+                            📸 Report Violation
+                        </button>
+                        <button class="action-btn" onclick="showWalletView()">
+                            💰 Check Wallet
+                        </button>
+                        <button class="action-btn" onclick="showMyReportsView()">
+                            📋 View Reports
+                        </button>
+                        <button class="action-btn" onclick="showProfileView()">
+                            ⚙️ Profile Settings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity-list" class="activity-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Report Violation View -->
+            <section id="report-view" class="view">
+                <div class="view-header">
+                    <button class="back-btn" onclick="showDashboardView()">← Back</button>
+                    <h2>Report Traffic Violation</h2>
+                </div>
+
+                <form id="violation-form" class="violation-form">
+                    <!-- Violation Type Selection -->
+                    <div class="form-group">
+                        <label for="violation-type">Violation Type <span class="text-gray-500">(Optional)</span></label>
+                        <select id="violation-type" name="violation_type">
+                            <option value="">Select violation type (optional)</option>
+                            <!-- Dynamically populated -->
+                        </select>
+                    </div>
+
+                    <!-- Location Information -->
+                    <div class="form-group">
+                        <label>Location</label>
+                        <button type="button" id="get-location" class="location-btn">
+                            📍 Use Current Location
+                        </button>
+                        <div id="location-info" class="location-info hidden">
+                            <p id="location-text">Getting location...</p>
+                            <div id="location-map" class="mini-map"></div>
+                        </div>
+                    </div>
+
+                    <!-- Date and Time -->
+                    <div class="form-group">
+                        <label for="occurred-at">When did this occur?</label>
+                        <input type="datetime-local" id="occurred-at" name="occurred_at" required>
+                    </div>
+
+                    <!-- Vehicle Information -->
+                    <div class="form-group">
+                        <label for="vehicle-number">Vehicle Number (if visible)</label>
+                        <input type="text" id="vehicle-number" name="vehicle_number" 
+                               placeholder="e.g., MH01AB1234" style="text-transform: uppercase;">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" 
+                                  placeholder="Describe what happened..." required></textarea>
+                    </div>
+
+                    <!-- Media Upload -->
+                    <div class="form-group">
+                        <label>Evidence (Photos/Video)</label>
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-content">
+                                <div class="upload-icon">📷</div>
+                                <p>Tap to capture photo or select files</p>
+                                <p class="upload-hint">Maximum 3 photos or 1 video (30 seconds)</p>
+                            </div>
+                            <input type="file" id="media-files" multiple 
+                                   accept="image/*,video/*" style="display: none;">
+                        </div>
+                        <div id="media-preview" class="media-preview"></div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submit-violation">
+                        Submit Report
+                    </button>
+                </form>
+            </section>
+
+            <!-- My Reports View -->
+            <section id="my-reports-view" class="view">
+                <div class="view-header">
+                    <button class="back-btn" onclick="showDashboardView()">← Back</button>
+                    <h2>My Reports</h2>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-status="all">All</button>
+                    <button class="filter-tab" data-status="pending">Pending</button>
+                    <button class="filter-tab" data-status="approved">Approved</button>
+                    <button class="filter-tab" data-status="rejected">Rejected</button>
+                </div>
+
+                <div id="reports-list" class="reports-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </section>
+
+            <!-- Wallet View -->
+            <section id="wallet-view" class="view">
+                <div class="view-header">
+                    <button class="back-btn" onclick="showDashboardView()">← Back</button>
+                    <h2>Wallet</h2>
+                </div>
+
+                <div class="wallet-card">
+                    <div class="wallet-balance">
+                        <div class="balance-label">Available Balance</div>
+                        <div class="balance-amount" id="wallet-balance">₹0.00</div>
+                    </div>
+                    <button class="withdraw-btn" id="withdraw-btn">Withdraw via UPI</button>
+                </div>
+
+                <div class="transactions-section">
+                    <h3>Recent Transactions</h3>
+                    <div id="transactions-list" class="transactions-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profile-view" class="view">
+                <div class="view-header">
+                    <button class="back-btn" onclick="showDashboardView()">← Back</button>
+                    <h2>Profile</h2>
+                </div>
+
+                <form id="profile-form" class="profile-form">
+                    <div class="form-group">
+                        <label for="profile-name">Full Name</label>
+                        <input type="text" id="profile-name" name="full_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-email">Email</label>
+                        <input type="email" id="profile-email" name="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-phone">Phone Number</label>
+                        <input type="tel" id="profile-phone" name="phone" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-city">City</label>
+                        <input type="text" id="profile-city" name="city">
+                    </div>
+
+                    <div class="kyc-section">
+                        <h3>eKYC Status</h3>
+                        <div id="kyc-status" class="kyc-status">
+                            <span class="status-badge">Pending</span>
+                        </div>
+                        <button type="button" id="complete-kyc" class="kyc-btn">
+                            Complete eKYC Verification
+                        </button>
+                    </div>
+
+                    <button type="submit" class="save-btn">Save Changes</button>
+                </form>
+            </section>
+        </main>
+
+        <!-- Offline Banner -->
+        <div id="offline-banner" class="offline-banner hidden">
+            📡 You're offline. Your actions will be synced when you're back online.
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/config.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/camera.js"></script>
+    <script src="/js/location.js"></script>
+    <script src="/js/offline.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+/* Mobile-specific styles for SnapChallan */
+
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.75rem;
+  }
+
+  .header-content {
+    padding: 0 0.75rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.125rem;
+  }
+
+  /* Navigation adjustments */
+  .side-nav {
+    width: 100%;
+    left: -100%;
+  }
+
+  .side-nav.open {
+    transform: translateX(100%);
+  }
+
+  /* Stats grid for mobile */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* Action grid for mobile */
+  .action-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .action-btn {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Form adjustments */
+  .violation-form,
+  .profile-form {
+    padding: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  /* Upload area for mobile */
+  .upload-area {
+    padding: 1.5rem 1rem;
+  }
+
+  .upload-icon {
+    font-size: 2rem;
+  }
+
+  /* Media preview grid */
+  .media-preview {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  /* Filter tabs scroll */
+  .filter-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-tab {
+    min-width: 80px;
+  }
+
+  /* Report cards on mobile */
+  .report-card {
+    padding: 1rem;
+  }
+
+  .report-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Wallet card mobile */
+  .wallet-card {
+    padding: 1.5rem;
+  }
+
+  .balance-amount {
+    font-size: 2rem;
+  }
+
+  /* Transaction items mobile */
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .transaction-amount {
+    align-self: flex-end;
+  }
+
+  /* Toast notifications mobile */
+  .toast-container {
+    right: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .toast {
+    max-width: none;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .icon-btn,
+  .action-btn,
+  .filter-tab,
+  .nav-link {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .submit-btn,
+  .save-btn,
+  .kyc-btn,
+  .withdraw-btn {
+    min-height: 48px;
+  }
+}
+
+/* Camera and media capture styles */
+.camera-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: black;
+  z-index: 10000;
+  display: none;
+  flex-direction: column;
+}
+
+.camera-modal.active {
+  display: flex;
+}
+
+.camera-header {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.camera-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.camera-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid white;
+  border-radius: 1rem;
+  width: 80%;
+  aspect-ratio: 4/3;
+  pointer-events: none;
+}
+
+.camera-controls {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.capture-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid #ccc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.capture-btn:active {
+  transform: scale(0.95);
+}
+
+.camera-switch {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+/* Location picker styles */
+.location-picker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 10000;
+  display: none;
+  flex-direction: column;
+}
+
+.location-picker.active {
+  display: flex;
+}
+
+.location-header {
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.location-map-container {
+  flex: 1;
+  position: relative;
+}
+
+#location-map-full {
+  width: 100%;
+  height: 100%;
+}
+
+.location-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  font-size: 2rem;
+  color: var(--error-color);
+  pointer-events: none;
+}
+
+.location-controls {
+  background: var(--surface-color);
+  border-top: 1px solid var(--border-color);
+  padding: 1rem;
+}
+
+.current-location-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.location-address {
+  background: var(--background-color);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.confirm-location-btn {
+  background: var(--success-color);
+  color: white;
+  border: none;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Gesture and swipe styles */
+.swipe-indicator {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  animation: fadeInOut 3s infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Pull to refresh */
+.pull-to-refresh {
+  position: relative;
+  overflow: hidden;
+}
+
+.pull-indicator {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-color);
+  padding: 1rem;
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.pull-indicator.show {
+  transform: translateX(-50%) translateY(60px);
+}
+
+/* Haptic feedback simulation */
+.vibrate {
+  animation: vibrate 0.3s;
+}
+
+@keyframes vibrate {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .app-header {
+    padding-top: env(safe-area-inset-top);
+    height: calc(64px + env(safe-area-inset-top));
+  }
+
+  .main-content {
+    margin-top: calc(64px + env(safe-area-inset-top));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .side-nav {
+    top: calc(64px + env(safe-area-inset-top));
+    height: calc(100vh - 64px - env(safe-area-inset-top));
+  }
+}
+
+/* Dark mode support (auto-detect) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #0f172a;
+    --surface-color: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+  }
+
+  .camera-modal {
+    background: #000;
+  }
+
+  .location-picker {
+    background: var(--background-color);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000;
+    --shadow: 0 0 0 1px #000;
+  }
+
+  .upload-area {
+    border-width: 3px;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    box-shadow: 0 0 0 3px #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .loading-spinner {
+    animation: none;
+    border-top-color: transparent;
+  }
+}
+
+/* Print styles */
+@media print {
+  .app-header,
+  .side-nav,
+  .camera-modal,
+  .location-picker,
+  .toast-container,
+  .offline-banner {
+    display: none !important;
+  }
+
+  .main-content {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .view {
+    display: block !important;
+  }
+
+  .report-card,
+  .transaction-item {
+    break-inside: avoid;
+  }
+}
